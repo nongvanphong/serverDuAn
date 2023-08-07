@@ -1,10 +1,11 @@
 const express = require("express");
 require("express-group-routes");
-const tesst = require("../src/controllers/test");
+const Auth = require("../src/controllers/auths");
 
 var router = express.Router();
 router.group("/auth", (router) => {
-  router.get("/test", tesst.Test);
+  router.post("/register", Auth.Rigister);
+  router.post("/Login", Auth.Login);
 });
 
 module.exports = router;
