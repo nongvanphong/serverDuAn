@@ -13,7 +13,7 @@ const valiJwt = require("../utils/jwtUtils");
 
 exports.Rigister = async (req, res) => {
   try {
-    const { phone, password } = req.body;
+    const { phone, password } = req.login;
 
     const checkPhoneNumber = await AuthModel.checkPhone(phone);
     if (checkPhoneNumber)
@@ -44,7 +44,7 @@ exports.Rigister = async (req, res) => {
 };
 exports.Login = async (req, res) => {
   try {
-    const { phone, password } = req.body;
+    const { phone, password } = req.login;
     const user = await AuthModel.checkPhone(phone);
     if (!user)
       return res.status(404).json({
@@ -126,6 +126,27 @@ exports.Login = async (req, res) => {
     return res.status(400).json({
       status: httpStatus.getStatus(400),
       msg: "login fail!",
+    });
+  }
+};
+exports.CheckPhone = async (req, res) => {
+  try {
+    const phone_number = req.phone_number;
+    const checkPhoneNumber = await AuthModel.checkPhone(phone_number);
+    if (checkPhoneNumber)
+      return res.status(409).json({
+        status: httpStatus.getStatus(409),
+        msg: "Phone number already in use! please login",
+      });
+
+    return res.status(200).json({
+      status: httpStatus.getStatus(200),
+      data: "phone number is not used please register!",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: httpStatus.getStatus(400),
+      msg: "check your phone number fail!",
     });
   }
 };
