@@ -30,7 +30,7 @@ module.exports = {
         defaultValue: 0, // 0 là vẫn đang sử dụng 1 là khóa tạm thời 2 là khóa vĩnh viễn
       },
       refresh_token: {
-        type: Sequelize.STRING(255),
+        type: Sequelize.STRING(150),
       },
       image: {
         type: Sequelize.STRING(50),

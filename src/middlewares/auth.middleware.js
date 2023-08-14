@@ -1,55 +1,37 @@
 var validator = require("validator");
+const dotenv = require("dotenv").config();
 
 const httpStatus = require("../../configs/httptatus");
+const configJwt = require("../../configs/jwt");
+const valiJwt = require("../utils/jwtUtils");
 
-const validPhoneNumber = (req, res, next) => {
-  const { phone = validator.trim(phone) } = req.body;
-  var error = {};
-  if (!phone) {
-    error.phone = "Please enter the phone number";
-  } else if (!validator.isMobilePhone(phone, ["vi-VN"])) {
-    error.phone = "phone number is not in the correct format";
-  }
-
-  if (Object.keys(error).length !== 0) {
-    return res.status(400).send({
-      status: httpStatus.getStatus(400),
-      msg: "Request is not valid!",
-      err: error,
+const UserModel = require("../models/auths.models");
+exports.isAuth = async (req, res, next) => {
+  const bearerToken = req.headers.authorization;
+  if (!bearerToken || !bearerToken.startsWith("Bearer ")) {
+    return res.status(401).send({
+      status: httpStatus.getStatus(401),
+      msg: "Bearer token not found!",
     });
   }
-  req.phone_number = phone;
-  return next();
-};
-const validLogin = (req, res, next) => {
-  const { phone = validator.trim(phone), password = validator.trim(password) } =
-    req.body;
-  var error = {};
-  if (!phone) {
-    error.phone = "Please enter the phone number";
-  } else if (!validator.isMobilePhone(phone, ["vi-VN"])) {
-    error.phone = "phone number is not in the correct format";
-  }
-  if (!password) {
-    error.password = "Please enter the password";
-  } else if (password.length < 6 || password.length > 15) {
-    error.password = "password >=6 or <= 15";
-  }
 
-  if (Object.keys(error).length !== 0) {
-    return res.status(400).send({
-      status: httpStatus.getStatus(400),
-      msg: "Request is not valid!",
-      err: error,
+  const passwordToken =
+    dotenv.parsed.PASSWORD_TOKEN || configJwt.accessTokenSecret;
+
+  const verified = await valiJwt.verifyToken(
+    bearerToken.slice(7),
+    passwordToken
+  );
+
+  if (!verified) {
+    return res.status(401).send({
+      status: httpStatus.getStatus(401),
+      msg: "Token expired!",
     });
   }
-  req.login = {
-    phone,
-    password,
-  };
+
+  const user = await UserModel.findUser(verified.payload.user_id);
+
+  req.user = user;
   return next();
-};
-module.exports = {
-  validPhoneNumber,
-  validLogin,
 };

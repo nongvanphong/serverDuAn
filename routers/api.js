@@ -1,15 +1,29 @@
 const express = require("express");
 require("express-group-routes");
 
-const Auth = require("../src/controllers/auths");
+const AuthController = require("../src/controllers/auths.controllers");
+const StoreController = require("../src/controllers/store.controllers");
 
-const validAuth = require("../src/middlewares/auth.middleware");
+const validAuth = require("../src/middlewares/validate/auth.middleware.validate");
+
+const isAuth = require("../src/middlewares/auth.middleware");
+const isPremission = require("../src/middlewares/premission.minddleware");
 
 var router = express.Router();
 router.group("/auth", (router) => {
-  router.post("/register", validAuth.validLogin, Auth.Rigister);
-  router.post("/login", validAuth.validLogin, Auth.Login);
-  router.post("/checkphone", validAuth.validPhoneNumber, Auth.CheckPhone);
+  router.post("/register", validAuth.validLogin, AuthController.Rigister);
+  router.post("/login", validAuth.validLogin, AuthController.Login);
+  router.post(
+    "/checkphone",
+    validAuth.validPhoneNumber,
+    AuthController.CheckPhone
+  );
+  router.post("/register/store", AuthController.RigisterStore);
+  router.post("/refreshtoken", AuthController.refreshToken);
+  router.post("/logout", AuthController.logout);
 });
-
+//isPremission([0])
+router.group("/store", (router) => {
+  router.get("/all", isAuth.isAuth, isPremission([1]), StoreController.all);
+});
 module.exports = router;
