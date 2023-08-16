@@ -12,16 +12,17 @@ const app = express();
 app.use(express.json());
 // app.use(express.static("uploads/videos"));
 // app.use(express.static("uploads/images"));
-app.use(
-  cors({
-    origin: ["http://192.168.10.26:3000", "http://192.168.10.26:4173"],
-    credentials: true,
-    exposedHeaders: ["Access-Control-Allow-Origin"],
-    allowedHeaders: ["Content-Type", "Origin", "User-Agent", "authorization"],
-    methods: ["POST", "GET", "PUT", "DELETE", "OPTIONS"],
-    maxAge: 86400,
-  })
-);
+// app.use(
+//   cors({
+//     origin: ["http://localhost:1234", "http://192.168.10.26:4173"],
+//     credentials: true,
+//     exposedHeaders: ["Access-Control-Allow-Origin"],
+//     allowedHeaders: ["Content-Type", "Origin", "User-Agent", "authorization"],
+//     methods: ["POST", "GET", "PUT", "DELETE", "OPTIONS"],
+//     maxAge: 86400,
+//   })
+// );
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

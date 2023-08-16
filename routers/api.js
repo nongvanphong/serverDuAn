@@ -20,7 +20,7 @@ router.group("/auth", (router) => {
   );
   router.post("/register/store", AuthController.RigisterStore);
   router.post("/refreshtoken", AuthController.refreshToken);
-  router.post("/logout", AuthController.logout);
+  router.post("/logout", isAuth.isAuth, AuthController.logout);
 });
 //isPremission([0])
 router.group("/store", (router) => {

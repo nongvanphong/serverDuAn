@@ -109,14 +109,16 @@ exports.Login = async (req, res) => {
     const data = {
       accessToken,
       refresh_token,
-      id: user.id,
-      user_name: user.user_name,
-      phone: user.phone,
-      permission: user.permission,
-      status: user.status,
-      image: user.image,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
+      info: {
+        id: user.id,
+        user_name: user.user_name,
+        phone: user.phone,
+        permission: user.permission,
+        status: user.status,
+        image: user.image,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+      },
     };
     return res.status(200).json({
       status: httpStatus.getStatus(200),
@@ -261,9 +263,9 @@ exports.refreshToken = async (req, res) => {
 };
 exports.logout = async (req, res) => {
   try {
-    const { refresh_token } = req.body;
+    const { id } = req.user;
 
-    const result = await AuthModel.logout(refresh_token);
+    const result = await AuthModel.logout(id);
 
     return res.status(200).json({
       status: httpStatus.getStatus(200),

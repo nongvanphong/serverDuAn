@@ -25,11 +25,8 @@ class AuthModel {
   async findRefreshToken(refresh_token) {
     return Users.findOne({ where: { refresh_token: refresh_token } });
   }
-  async logout(refresh_token) {
-    return Users.update(
-      { refresh_token: null },
-      { where: { refresh_token: refresh_token } }
-    );
+  async logout(id) {
+    return Users.update({ refresh_token: null }, { where: { id: id } });
   }
 }
 
