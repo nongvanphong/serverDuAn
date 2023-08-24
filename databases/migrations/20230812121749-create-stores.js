@@ -23,11 +23,11 @@ module.exports = {
         allowNull: false,
       },
       lat_store: {
-        type: Sequelize.DECIMAL(10, 8),
+        type: Sequelize.DECIMAL(17, 15),
         allowNull: false,
       },
       long_store: {
-        type: Sequelize.DECIMAL(11, 8),
+        type: Sequelize.DECIMAL(18, 15),
         allowNull: false,
       },
       image_store: {
@@ -50,10 +50,10 @@ module.exports = {
         type: Sequelize.DATE,
       },
       time_open: {
-        type: Sequelize.DATE,
+        type: Sequelize.TIME,
       },
       time_close: {
-        type: Sequelize.DATE,
+        type: Sequelize.TIME,
       },
     });
   },

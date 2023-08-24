@@ -152,70 +152,11 @@ exports.CheckPhone = async (req, res) => {
     });
   }
 };
-exports.RigisterStore = async (req, res) => {
-  try {
-    const {
-      phone_store,
-      phone,
-      password,
-      name_store,
-      lat_store,
-      long_store,
-      address_store,
-    } = req.body;
 
-    const checkPhoneNumber = await AuthModel.checkPhone(phone);
-    if (checkPhoneNumber)
-      return res.status(409).json({
-        status: httpStatus.getStatus(409),
-        msg: "Phone number already in use!",
-      });
-    const checkPhoneNumberSrore = await storesModels.checkPhone(phone_store);
-    if (checkPhoneNumberSrore)
-      return res.status(409).json({
-        status: httpStatus.getStatus(409),
-        msg: "Phone number store already in use",
-      });
-    const hashPassword = bcrypt.hashSync(password, numberHash);
-
-    try {
-      await sequelize.transaction(async (transaction) => {
-        const newData = { phone, password: hashPassword, permission: 1 };
-
-        const result = await AuthModel.register(newData, "WEB", transaction);
-
-        const newStore = {
-          user_id: result.id,
-          phone_store,
-          name_store,
-          lat_store,
-          long_store,
-          address_store,
-        };
-
-        await storesModels.register(newStore, "WEB", transaction);
-      });
-    } catch (error) {
-      return res.status(400).json({
-        status: httpStatus.getStatus(400),
-        msg: "register store fail!",
-      });
-    }
-    return res.status(201).json({
-      status: httpStatus.getStatus(201),
-      data: "Ok",
-    });
-  } catch (error) {
-    return res.status(400).json({
-      status: httpStatus.getStatus(400),
-      msg: "register store fail!",
-    });
-  }
-};
 exports.refreshToken = async (req, res) => {
   // Get Bearer token from Headers
   const bearerToken = req.body.refreshToken;
-  console.log(bearerToken);
+
   // if (!bearerToken || !bearerToken.startsWith("Bearer ")) {
   //   return res.status(401).send({
   //     status: httpStatus.getStatus(401),
@@ -260,7 +201,7 @@ exports.refreshToken = async (req, res) => {
       msg: "Access token generation failed, please try again!",
     });
   }
-  console.log("----", accessToken);
+
   return res.status(200).json({
     status: httpStatus.getStatus(200),
     data: { accessToken },

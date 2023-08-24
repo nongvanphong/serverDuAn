@@ -18,12 +18,18 @@ router.group("/auth", (router) => {
     validAuth.validPhoneNumber,
     AuthController.CheckPhone
   );
-  router.post("/register/store", AuthController.RigisterStore);
+
   router.post("/refreshtoken", AuthController.refreshToken);
   router.post("/logout", isAuth.isAuth, AuthController.logout);
 });
 //isPremission([0])
 router.group("/store", (router) => {
   router.get("/all", isAuth.isAuth, isPremission([0, 1]), StoreController.all);
+  router.post(
+    "/register",
+    isAuth.isAuth,
+    isPremission([0, 1]),
+    StoreController.RigisterStore
+  );
 });
 module.exports = router;

@@ -21,8 +21,8 @@ module.exports = (sequelize, DataTypes) => {
       image_store: DataTypes.STRING,
       address_store: DataTypes.STRING,
       status: DataTypes.TINYINT,
-      time_open: DataTypes.DATE,
-      time_close: DataTypes.DATE,
+      time_open: DataTypes.TIME,
+      time_close: DataTypes.TIME,
     },
     {
       sequelize,
