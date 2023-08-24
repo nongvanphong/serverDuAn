@@ -24,6 +24,6 @@ router.group("/auth", (router) => {
 });
 //isPremission([0])
 router.group("/store", (router) => {
-  router.get("/all", isAuth.isAuth, isPremission([1]), StoreController.all);
+  router.get("/all", isAuth.isAuth, isPremission([0, 1]), StoreController.all);
 });
 module.exports = router;

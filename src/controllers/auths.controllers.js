@@ -214,23 +214,28 @@ exports.RigisterStore = async (req, res) => {
 };
 exports.refreshToken = async (req, res) => {
   // Get Bearer token from Headers
-  const bearerToken = req.headers.authorization;
-
-  if (!bearerToken || !bearerToken.startsWith("Bearer ")) {
+  const bearerToken = req.body.refreshToken;
+  console.log(bearerToken);
+  // if (!bearerToken || !bearerToken.startsWith("Bearer ")) {
+  //   return res.status(401).send({
+  //     status: httpStatus.getStatus(401),
+  //     msg: "Bearer token not found!",
+  //   });
+  // }
+  if (!bearerToken) {
     return res.status(401).send({
       status: httpStatus.getStatus(401),
       msg: "Bearer token not found!",
     });
   }
-
   const timeLifeToken = dotenv.parsed.TOKEN_LIFE || configJwt.accessTokenLife;
   const passwordToken =
     dotenv.parsed.PASSWORD_TOKEN || configJwt.accessTokenSecret;
 
-  let refreshToken = bearerToken.slice(7);
+  //  let refreshToken = bearerToken.slice(7);
 
   // Get username from payload
-  const user = await AuthModel.findRefreshToken(refreshToken);
+  const user = await AuthModel.findRefreshToken(bearerToken);
 
   if (!user) {
     return res.status(400).send({
@@ -255,7 +260,7 @@ exports.refreshToken = async (req, res) => {
       msg: "Access token generation failed, please try again!",
     });
   }
-
+  console.log("----", accessToken);
   return res.status(200).json({
     status: httpStatus.getStatus(200),
     data: { accessToken },

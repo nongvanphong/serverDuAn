@@ -13,6 +13,9 @@ class StoresModel {
   async checkPhone(phone_store) {
     return Stores.findOne({ where: { phone_store: phone_store } });
   }
+  async getAll(req, user_id) {
+    return Stores.findAll({ where: { user_id: user_id } });
+  }
 }
 
 module.exports = new StoresModel();
