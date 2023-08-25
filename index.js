@@ -9,7 +9,7 @@ var http = require("http");
 const cors = require("cors");
 const app = express();
 
-// app.use(express.static("uploads/videos"));
+app.use(express.static("uploads/public"));
 // app.use(express.static("uploads/images"));
 // app.use(
 //   cors({

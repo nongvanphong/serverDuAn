@@ -12,6 +12,7 @@
 
 -- mở dự án
 -- mở terminal gõ cd databases -> npx sequelize-cli db:migrate
+-- mở terminal gõ cd databases -> npx sequelize-cli db:seed:all
 -- không lỗi là ok
 
 # vào file .env
