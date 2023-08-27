@@ -11,6 +11,11 @@ module.exports = {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     dialect: process.env.NAME_SQL,
+    dialectOptions: {
+      useUTC: false, // for reading from database
+      timezone: "+07:00", // set timezone to UTC+07:00 for reading from database
+    },
+    timezone: "+07:00", // set timezone to UTC+07:00 for writing to database
   },
   test: {
     host: process.env.DB_HOST,
@@ -19,6 +24,7 @@ module.exports = {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     dialect: process.env.NAME_SQL,
+    //timezone: "+00:00",
   },
   production: {
     host: process.env.DB_HOST,
@@ -27,5 +33,6 @@ module.exports = {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     dialect: process.env.NAME_SQL,
+    timezone: "+00:00",
   },
 };

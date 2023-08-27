@@ -17,17 +17,18 @@ module.exports = {
         type: Sequelize.STRING(15),
         unique: true,
       },
+      email: {
+        allowNull: false,
+        type: Sequelize.STRING(50),
+        unique: true,
+      },
       password: {
         allowNull: false,
         type: Sequelize.STRING(100),
       },
-      permission: {
-        type: Sequelize.TINYINT(2),
-        defaultValue: 0, // 0 là user  1 là cửa hàng 2 là admin
-      },
       status: {
         type: Sequelize.TINYINT(2),
-        defaultValue: 0, // 0 là vẫn đang sử dụng 1 là khóa tạm thời 2 là khóa vĩnh viễn
+        defaultValue: 1, // 0 là vẫn đang sử dụng 1 chưa kích hoạt 2 là khóa vĩnh viễn
       },
       refresh_token: {
         type: Sequelize.STRING(150),
@@ -47,6 +48,10 @@ module.exports = {
     await queryInterface.addIndex("users", ["phone"], {
       unique: true,
       name: "phone_unique",
+    });
+    await queryInterface.addIndex("users", ["email"], {
+      name: "email_index",
+      unique: true,
     });
   },
   async down(queryInterface, Sequelize) {

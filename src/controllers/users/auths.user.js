@@ -4,53 +4,115 @@ const path = require("path");
 const dotenv = require("dotenv").config();
 const randToken = require("rand-token");
 
-const httpStatus = require("../../configs/httptatus");
-const { numberHash } = require("../../config");
-const AuthModel = require("../models/auths.models");
-const configJwt = require("../../configs/jwt");
+const httpStatus = require("../../../configs/httptatus");
+const { numberHash } = require("../../../config");
+const AuthModel = require("../../models/auths.models");
+const configJwt = require("../../../configs/jwt");
 const moment = require("moment/moment");
-const valiJwt = require("../utils/jwtUtils");
-const storesModels = require("../models/stores.models");
-const { sequelize } = require("../../databases/models");
+const valiJwt = require("../../utils/jwtUtils");
+const storesModels = require("../../models/stores.models");
+const { sequelize } = require("../../../databases/models");
+const OtpRepo = require("../../models/Otp.repo");
+const {
+  generateRandomNumbers,
+  dateTime,
+  SendOtp,
+} = require("../../../configs/sendOtp");
+const authsModels = require("../../models/auths.models");
 
 exports.Rigister = async (req, res) => {
   try {
-    const { phone, password } = req.login;
+    const { email, phone, password } = req.register;
 
-    const checkPhoneNumber = await AuthModel.checkPhone(phone);
+    const checkPhoneNumber = await AuthModel.checkPhoneMail(phone, email);
     if (checkPhoneNumber)
       return res.status(409).json({
         status: httpStatus.getStatus(409),
-        msg: "Phone number already in use!",
+        msg: "Phone number or email already in use!",
       });
 
     const hashPassword = bcrypt.hashSync(password, numberHash);
-    const newData = { phone, password: hashPassword };
-
-    const result = await AuthModel.register(newData);
-    if (!result)
-      return res.status(400).json({
-        status: httpStatus.getStatus(400),
-        msg: "register fail!",
+    const newData = { email, phone, password: hashPassword };
+    await sequelize.transaction(async (transaction) => {
+      await AuthModel.register(newData, transaction);
+      const otp = generateRandomNumbers(100000, 999999);
+      const dataOtp = {
+        email,
+        codes: otp,
+        endAt: dateTime(5),
+      };
+      await OtpRepo.create(dataOtp, transaction);
+      SendOtp(email, otp);
+      return res.status(201).json({
+        status: httpStatus.getStatus(201),
+        data: "register sussecc!",
       });
-    return res.status(201).json({
-      status: httpStatus.getStatus(201),
-      data: "register sussecc!",
     });
   } catch (error) {
     return res.status(400).json({
       status: httpStatus.getStatus(400),
-      msg: "login fail!",
+      msg: "register fail!",
+    });
+  }
+};
+exports.activated = async (req, res) => {
+  try {
+    const { email, code } = req.body;
+    const timeNow = dateTime(0);
+
+    const result = await AuthModel.checkMail(email, "");
+    if (!result) {
+      return res.status(400).json({
+        status: httpStatus.getStatus(400),
+        msg: "email dose not exist!",
+      });
+    }
+
+    if (!code) {
+      console.log("tạo");
+      return;
+    }
+
+    const resultOtp = await OtpRepo.verify(email, code, timeNow);
+    if (!resultOtp) {
+      return res.status(400).json({
+        status: httpStatus.getStatus(400),
+        msg: "wrong otp code!",
+      });
+    }
+    const activated = await authsModels.activated(email);
+    if (!activated) {
+      return res.status(400).json({
+        status: httpStatus.getStatus(400),
+        msg: "wrong otp code!",
+      });
+    }
+    return res.status(200).json({
+      status: httpStatus.getStatus(200),
+      data: "activaved sussecc!",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: httpStatus.getStatus(400),
+      msg: "account not activated!",
     });
   }
 };
 exports.Login = async (req, res) => {
   try {
-    const { phone, password } = req.login;
-    const user = await AuthModel.checkPhone(phone);
+    const { email, phone, password } = req.body;
+
+    if (email && phone) {
+      return res.status(400).json({
+        status: httpStatus.getStatus(400),
+        msg: "can only enter phone number or gmail!",
+      });
+    }
+
+    const user = await AuthModel.checkMail(email, phone);
     if (!user)
-      return res.status(404).json({
-        status: httpStatus.getStatus(404),
+      return res.status(400).json({
+        status: httpStatus.getStatus(400),
         msg: "you are not registered!",
       });
     const comparePwd = await bcrypt.compareSync(password, user.password);
@@ -69,13 +131,6 @@ exports.Login = async (req, res) => {
     const timeLifeToken = dotenv.parsed.TOKEN_LIFE || configJwt.accessTokenLife;
     const passwordToken =
       dotenv.parsed.PASSWORD_TOKEN || configJwt.accessTokenSecret;
-
-    // regfresh
-    const timeLifeRefreshToken =
-      dotenv.parsed.REFRESH_TOKEN_LIFE || configJwt.accessRefreshTokenLife;
-    const passwordRefreshToken =
-      dotenv.parsed.PASSWORD_REFRESH_TOKEN ||
-      configJwt.accessRefreshTokenSecret;
 
     //Duy tri dang nhap
     const to_day = moment();
@@ -113,7 +168,7 @@ exports.Login = async (req, res) => {
         id: user.id,
         user_name: user.user_name,
         phone: user.phone,
-        permission: user.permission,
+        email: user.email,
         status: user.status,
         image: user.image,
         createdAt: user.createdAt,
@@ -131,24 +186,24 @@ exports.Login = async (req, res) => {
     });
   }
 };
-exports.CheckPhone = async (req, res) => {
+exports.CheckMailPhone = async (req, res) => {
   try {
-    const phone_number = req.phone_number;
-    const checkPhoneNumber = await AuthModel.checkPhone(phone_number);
+    const { phone, email } = req.body;
+    const checkPhoneNumber = await AuthModel.checkMail(email, phone);
     if (checkPhoneNumber)
       return res.status(409).json({
         status: httpStatus.getStatus(409),
-        msg: "Phone number already in use! please login",
+        msg: "Phone number or email  already in use! please login",
       });
 
     return res.status(200).json({
       status: httpStatus.getStatus(200),
-      data: "phone number is not used please register!",
+      data: "phone number  or email  is not used please register!",
     });
   } catch (error) {
     return res.status(400).json({
       status: httpStatus.getStatus(400),
-      msg: "check your phone number fail!",
+      msg: "check your phone number  or email  fail!",
     });
   }
 };
