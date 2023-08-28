@@ -39,7 +39,7 @@ exports.Rigister = async (req, res) => {
       const dataOtp = {
         email,
         codes: otp,
-        endAt: dateTime(5),
+        endAt: dateTime(3),
       };
       await OtpRepo.create(dataOtp, transaction);
       SendOtp(email, otp);
@@ -58,7 +58,8 @@ exports.Rigister = async (req, res) => {
 exports.activated = async (req, res) => {
   try {
     const { email, code } = req.body;
-    const timeNow = dateTime(0);
+
+    await OtpRepo.delete();
 
     const result = await AuthModel.checkMail(email, "");
     if (!result) {
@@ -68,12 +69,34 @@ exports.activated = async (req, res) => {
       });
     }
 
+    const checkEmail = await OtpRepo.findEmail(email);
+
+    if (checkEmail) {
+      return res.status(400).json({
+        status: httpStatus.getStatus(400),
+        msg: "the otp code has not expired please resend later!",
+      });
+    }
+
     if (!code) {
-      console.log("tạo");
+      await sequelize.transaction(async (transaction) => {
+        const otp = generateRandomNumbers(100000, 999999);
+        const dataOtp = {
+          email,
+          codes: otp,
+          endAt: dateTime(3),
+        };
+        await OtpRepo.create(dataOtp, transaction);
+        SendOtp(email, otp);
+        return res.status(200).json({
+          status: httpStatus.getStatus(200),
+          data: "send otp sussecc!",
+        });
+      });
       return;
     }
 
-    const resultOtp = await OtpRepo.verify(email, code, timeNow);
+    const resultOtp = await OtpRepo.verify(email, code);
     if (!resultOtp) {
       return res.status(400).json({
         status: httpStatus.getStatus(400),

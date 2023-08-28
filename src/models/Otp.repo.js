@@ -7,8 +7,18 @@ class OtpsRepo {
   async create(data, transaction) {
     return Otps.create(data, { transaction });
   }
-  async findPk(email) {
-    return Otps.findByPk(email);
+  async findEmail(email) {
+    return Otps.findOne({ where: { email: email } });
+  }
+  async delete() {
+    const timenow1 = new Date().toISOString();
+    return Otps.destroy({
+      where: {
+        endAt: {
+          [Op.lt]: timenow1,
+        },
+      },
+    });
   }
   async update(data, email, transaction) {
     return Otps.update(data, {
