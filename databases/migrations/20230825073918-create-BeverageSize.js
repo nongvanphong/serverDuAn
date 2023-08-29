@@ -9,15 +9,15 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      bs_id: {
+      br_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      bs_size: {
+      br_size: {
         type: Sequelize.STRING(5),
         allowNull: false,
       },
-      bs_price: {
+      br_price: {
         type: Sequelize.INTEGER,
         allowNull: false,
       },

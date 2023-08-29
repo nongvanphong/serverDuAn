@@ -4,8 +4,12 @@ require("express-group-routes");
 const AuthUser = require("../src/controllers/users/auths.user");
 
 const AuthStore = require("../src/controllers/stores/auths.store");
+const BeverageStore = require("../src/controllers/stores/beverage.store");
+
+const uploadFile = require("../src/config/upload.config");
 
 const userValidAuth = require("../src/middlewares/validate/user/auth.user.vali");
+const vaildFile = require("../src/middlewares/file.mid");
 
 const isAuth = require("../src/middlewares/auth.middleware");
 const isPremission = require("../src/middlewares/premission.minddleware");
@@ -40,6 +44,14 @@ router.group("/store", (router) => {
     router.post("/login", AuthUser.Login);
     router.post("/refreshtoken", AuthUser.refreshToken);
     router.get("/logout", isAuth.isAuth, AuthUser.logout);
+  });
+  router.group("/beverage", (router) => {
+    router.post(
+      "/create",
+      uploadFile.single("file"),
+      vaildFile.storeFile,
+      BeverageStore.create
+    );
   });
 });
 router.group("/user", (router) => {

@@ -13,11 +13,9 @@ module.exports = (sequelize, DataTypes) => {
   }
   BeverageSize.init(
     {
-      kind_name: DataTypes.STRING,
-
-      bs_id: DataTypes.INTEGER,
-      bs_price: DataTypes.INTEGER,
-      bs_size: DataTypes.STRING,
+      br_id: DataTypes.INTEGER,
+      br_price: DataTypes.INTEGER,
+      br_size: DataTypes.STRING,
     },
     {
       sequelize,
