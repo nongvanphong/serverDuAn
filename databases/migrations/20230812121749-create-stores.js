@@ -2,38 +2,48 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable("stores", {
+    await queryInterface.createTable("Stores", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      user_id: {
-        type: Sequelize.INTEGER,
+      email: {
+        type: Sequelize.STRING(50),
         allowNull: false,
+        unique: true,
       },
-      phone_store: {
+      store_phone_number: {
         type: Sequelize.STRING(15),
         allowNull: false,
         unique: true,
       },
-      name_store: {
+      manager_phone_number: {
+        type: Sequelize.STRING(15),
+        allowNull: false,
+        unique: true,
+      },
+      store_name: {
         type: Sequelize.STRING(100),
         allowNull: false,
       },
-      lat_store: {
+      store_phone_number: {
+        type: Sequelize.STRING(15),
+        allowNull: false,
+      },
+      lat: {
         type: Sequelize.DECIMAL(17, 15),
         allowNull: false,
       },
-      long_store: {
+      long: {
         type: Sequelize.DECIMAL(18, 15),
         allowNull: false,
       },
-      image_store: {
+      image: {
         type: Sequelize.STRING(100),
       },
-      address_store: {
+      address: {
         type: Sequelize.STRING(150),
         allowNull: false,
       },
@@ -49,14 +59,27 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      time_open: {
-        type: Sequelize.TIME,
+      password: {
+        allowNull: false,
+        type: Sequelize.STRING(100),
       },
-      time_close: {
-        type: Sequelize.TIME,
+      describe: {
+        type: Sequelize.STRING(5000),
+      },
+      refresh_token: {
+        type: Sequelize.STRING(150),
       },
     });
+    await queryInterface.addIndex("stores", ["store_phone_number"], {
+      unique: true,
+      name: "store_phone_index",
+    });
+    await queryInterface.addIndex("stores", ["email"], {
+      name: "store_email_index",
+      unique: true,
+    });
   },
+
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable("stores");
   },

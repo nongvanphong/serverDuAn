@@ -3,7 +3,7 @@ require("express-group-routes");
 
 const AuthUser = require("../src/controllers/users/auths.user");
 
-const StoreController = require("../src/controllers/store.controllers");
+const AuthStore = require("../src/controllers/stores/auths.store");
 
 const userValidAuth = require("../src/middlewares/validate/user/auth.user.vali");
 
@@ -35,7 +35,11 @@ var router = express.Router();
 // });
 router.group("/store", (router) => {
   router.group("/auth", (router) => {
-    router.get("/all", StoreController.all);
+    router.post("/register", AuthStore.Rigister);
+    router.post("/activated", AuthUser.activated);
+    router.post("/login", AuthUser.Login);
+    router.post("/refreshtoken", AuthUser.refreshToken);
+    router.get("/logout", isAuth.isAuth, AuthUser.logout);
   });
 });
 router.group("/user", (router) => {
@@ -44,7 +48,7 @@ router.group("/user", (router) => {
     router.post("/activated", AuthUser.activated);
     router.post("/login", AuthUser.Login);
     router.post("/refreshtoken", AuthUser.refreshToken);
-    router.post("/logout", isAuth.isAuth, AuthUser.logout);
+    router.get("/logout", isAuth.isAuth, AuthUser.logout);
     router.post(
       "/checkmailphone",
       //userValidAuth.validPhoneEmail,

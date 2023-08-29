@@ -37,6 +37,9 @@ class OtpsRepo {
           [Op.gt]: timenow1,
         },
       },
+      order: [
+        ["createdAt", "DESC"], // Hoặc ['endAt', 'DESC'] để sắp xếp giảm dần
+      ],
     });
   }
 }

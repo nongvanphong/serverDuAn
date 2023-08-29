@@ -6,7 +6,7 @@ const randToken = require("rand-token");
 
 const httpStatus = require("../../../configs/httptatus");
 const { numberHash } = require("../../../config");
-const AuthModel = require("../../models/auths.models");
+const AuthStoreRepo = require("../../models/store/auths.store.repo");
 const configJwt = require("../../../configs/jwt");
 const moment = require("moment/moment");
 const valiJwt = require("../../utils/jwtUtils");
@@ -22,19 +22,40 @@ const authsModels = require("../../models/auths.models");
 
 exports.Rigister = async (req, res) => {
   try {
-    const { email, phone, password } = req.register;
-
-    const checkPhoneNumber = await AuthModel.checkPhoneMail(phone, email);
+    const {
+      email,
+      store_phone_number,
+      store_name,
+      manager_phone_number,
+      lat,
+      long,
+      address,
+      password,
+      describe,
+    } = req.body;
+    const checkPhoneNumber = await AuthStoreRepo.checkPhoneMail(
+      store_phone_number,
+      email
+    );
     if (checkPhoneNumber)
       return res.status(409).json({
         status: httpStatus.getStatus(409),
         msg: "Phone number or email already in use!",
       });
-
     const hashPassword = bcrypt.hashSync(password, numberHash);
-    const newData = { email, phone, password: hashPassword };
+    const newData = {
+      email,
+      store_phone_number,
+      store_name,
+      manager_phone_number,
+      lat,
+      long,
+      address,
+      password: hashPassword,
+      describe,
+    };
     await sequelize.transaction(async (transaction) => {
-      await AuthModel.register(newData, transaction);
+      await AuthStoreRepo.register(newData, transaction);
       const otp = generateRandomNumbers(100000, 999999);
       const dataOtp = {
         email,
@@ -49,9 +70,10 @@ exports.Rigister = async (req, res) => {
       });
     });
   } catch (error) {
+    console.log(error);
     return res.status(400).json({
       status: httpStatus.getStatus(400),
-      msg: "register fail!",
+      msg: "register store fail!",
     });
   }
 };
@@ -61,7 +83,7 @@ exports.activated = async (req, res) => {
 
     await OtpRepo.delete();
 
-    const result = await AuthModel.checkMail(email, "");
+    const result = await AuthStoreRepo.checkMail(email, "");
     if (!result) {
       return res.status(400).json({
         status: httpStatus.getStatus(400),
@@ -130,7 +152,7 @@ exports.Login = async (req, res) => {
       });
     }
 
-    const user = await AuthModel.checkMail(email, phone);
+    const user = await AuthStoreRepo.checkMail(email, phone);
     if (!user)
       return res.status(400).json({
         status: httpStatus.getStatus(400),
@@ -176,7 +198,7 @@ exports.Login = async (req, res) => {
 
     if (!user.refresh_token) {
       // nếu không tồn tại thì uodate
-      await AuthModel.refreshToken(refresh_token, user.id);
+      await AuthStoreRepo.refreshToken(refresh_token, user.id);
     } else {
       // If this user already has a refresh token, get that refresh token from the database
       refresh_token = user.refresh_token;
@@ -207,27 +229,6 @@ exports.Login = async (req, res) => {
     });
   }
 };
-exports.CheckMailPhone = async (req, res) => {
-  try {
-    const { phone, email } = req.body;
-    const checkPhoneNumber = await AuthModel.checkMail(email, phone);
-    if (checkPhoneNumber)
-      return res.status(409).json({
-        status: httpStatus.getStatus(409),
-        msg: "Phone number or email  already in use! please login",
-      });
-
-    return res.status(200).json({
-      status: httpStatus.getStatus(200),
-      data: "phone number  or email  is not used please register!",
-    });
-  } catch (error) {
-    return res.status(400).json({
-      status: httpStatus.getStatus(400),
-      msg: "check your phone number  or email  fail!",
-    });
-  }
-};
 
 exports.refreshToken = async (req, res) => {
   // Get Bearer token from Headers
@@ -252,7 +253,7 @@ exports.refreshToken = async (req, res) => {
   //  let refreshToken = bearerToken.slice(7);
 
   // Get username from payload
-  const user = await AuthModel.findRefreshToken(bearerToken);
+  const user = await AuthStoreRepo.findRefreshToken(bearerToken);
 
   if (!user) {
     return res.status(400).send({
@@ -286,8 +287,7 @@ exports.refreshToken = async (req, res) => {
 exports.logout = async (req, res) => {
   try {
     const { id } = req.user;
-
-    const result = await AuthModel.logout(id);
+    await AuthStoreRepo.logout(id);
 
     return res.status(200).json({
       status: httpStatus.getStatus(200),

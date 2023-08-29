@@ -13,16 +13,18 @@ module.exports = (sequelize, DataTypes) => {
   }
   Stores.init(
     {
-      user_id: DataTypes.INTEGER,
-      phone_store: DataTypes.STRING,
-      name_store: DataTypes.STRING,
-      lat_store: DataTypes.DECIMAL,
-      long_store: DataTypes.DECIMAL,
-      image_store: DataTypes.STRING,
-      address_store: DataTypes.STRING,
+      email: DataTypes.STRING,
+      store_phone_number: DataTypes.STRING,
+      store_name: DataTypes.STRING,
+      manager_phone_number: DataTypes.STRING,
+      lat: DataTypes.DECIMAL,
+      long: DataTypes.DECIMAL,
+      image: DataTypes.STRING,
+      address: DataTypes.STRING,
       status: DataTypes.TINYINT,
-      time_open: DataTypes.TIME,
-      time_close: DataTypes.TIME,
+      refresh_token: DataTypes.STRING,
+      password: DataTypes.STRING,
+      describe: DataTypes.STRING,
     },
     {
       sequelize,
