@@ -50,6 +50,7 @@ router.group("/store", (router) => {
       "/create",
       uploadFile.single("file"),
       vaildFile.storeFile,
+      isAuth.isAuth,
       BeverageStore.create
     );
   });

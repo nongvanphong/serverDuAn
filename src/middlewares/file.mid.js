@@ -57,7 +57,7 @@ const storeFile = (req, res, next) => {
     }
     return;
   }
-  req.fileResult = `store/idstore/beverage` + file.filename;
+  req.fileResult = file.filename;
   return next();
 };
 
