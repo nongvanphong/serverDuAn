@@ -4,7 +4,7 @@ require("express-group-routes");
 const AuthUser = require("../src/controllers/users/auths.user");
 
 const AuthStore = require("../src/controllers/stores/auths.store");
-const BeverageStore = require("../src/controllers/stores/beverage.store");
+const Productstore = require("../src/controllers/stores/products.store");
 
 const uploadFile = require("../src/config/upload.config");
 
@@ -51,8 +51,9 @@ router.group("/store", (router) => {
       uploadFile.single("file"),
       vaildFile.storeFile,
       isAuth.isAuth,
-      BeverageStore.create
+      Productstore.create
     );
+    router.get("/getall", isAuth.isAuth, Productstore.getAll);
   });
 });
 router.group("/user", (router) => {
