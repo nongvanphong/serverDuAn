@@ -2,6 +2,7 @@ const express = require("express");
 require("express-group-routes");
 
 const AuthUser = require("../src/controllers/users/auths.user");
+const ProductUser = require("../src/controllers/users/products.user");
 
 const AuthStore = require("../src/controllers/stores/auths.store");
 const Productstore = require("../src/controllers/stores/products.store");
@@ -45,7 +46,7 @@ router.group("/store", (router) => {
     router.post("/refreshtoken", AuthUser.refreshToken);
     router.get("/logout", isAuth.isAuth, AuthUser.logout);
   });
-  router.group("/beverage", (router) => {
+  router.group("/product", (router) => {
     router.post(
       "/create",
       uploadFile.single("file"),
@@ -68,6 +69,9 @@ router.group("/user", (router) => {
       //userValidAuth.validPhoneEmail,
       AuthUser.CheckMailPhone
     );
+  });
+  router.group("/product", (router) => {
+    router.get("/all", isAuth.isAuth, ProductUser.getAll);
   });
 });
 module.exports = router;

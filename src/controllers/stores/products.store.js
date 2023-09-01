@@ -44,7 +44,8 @@ exports.create = async (req, res) => {
 };
 exports.getAll = async (req, res) => {
   try {
-    const { count, rows } = await ProductsRepo.findAll();
+    const user = req.user;
+    const { count, rows } = await ProductsRepo.findStore(user.id);
     return res.status(200).json({
       status: httpStatus.getStatus(200),
       total: count,
@@ -54,7 +55,7 @@ exports.getAll = async (req, res) => {
     console.log(error);
     return res.status(400).json({
       status: httpStatus.getStatus(400),
-      msg: "get all beverage fail!",
+      msg: "get all product fail!",
     });
   }
 };
