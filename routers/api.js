@@ -6,6 +6,7 @@ const ProductUser = require("../src/controllers/users/products.user");
 
 const AuthStore = require("../src/controllers/stores/auths.store");
 const Productstore = require("../src/controllers/stores/products.store");
+const CategreysStore = require("../src/controllers/stores/categreys.store");
 
 const uploadFile = require("../src/config/upload.config");
 
@@ -13,6 +14,7 @@ const userValidAuth = require("../src/middlewares/validate/user/auth.user.vali")
 const vaildFile = require("../src/middlewares/file.mid");
 
 const isAuth = require("../src/middlewares/auth.middleware");
+const isAuthStore = require("../src/middlewares/authStore.middleware");
 const isPremission = require("../src/middlewares/premission.minddleware");
 
 var router = express.Router();
@@ -41,20 +43,23 @@ var router = express.Router();
 router.group("/store", (router) => {
   router.group("/auth", (router) => {
     router.post("/register", AuthStore.Rigister);
-    router.post("/activated", AuthUser.activated);
-    router.post("/login", AuthUser.Login);
-    router.post("/refreshtoken", AuthUser.refreshToken);
-    router.get("/logout", isAuth.isAuth, AuthUser.logout);
+    router.post("/activated", AuthStore.activated);
+    router.post("/login", AuthStore.Login);
+    router.post("/refreshtoken", AuthStore.refreshToken);
+    router.get("/logout", isAuthStore.isAuthStore, AuthStore.logout);
   });
   router.group("/product", (router) => {
     router.post(
       "/create",
       uploadFile.single("file"),
       vaildFile.storeFile,
-      isAuth.isAuth,
+      isAuthStore.isAuthStore,
       Productstore.create
     );
     router.get("/getall", isAuth.isAuth, Productstore.getAll);
+  });
+  router.group("/categrey", (router) => {
+    router.get("/all", isAuthStore.isAuthStore, CategreysStore.getAll);
   });
 });
 router.group("/user", (router) => {

@@ -49,7 +49,7 @@ module.exports = {
       },
       status: {
         type: Sequelize.TINYINT(2),
-        defaultValue: 1, // mặc định la so 1 đang chờ được dueetj nếu được duyệt thì xuống 0 bị khóa lên 2
+        defaultValue: 1, //0 là bình thường 1 là đang chờ xác thực otp 2 khóa tài khoản 3 đang đợi admin xác minh
       },
       createdAt: {
         allowNull: false,

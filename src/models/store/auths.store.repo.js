@@ -29,16 +29,16 @@ class AuthUserRepo {
     );
   }
   async findUser(id) {
-    return Users.findByPk(id);
+    return Stores.findByPk(id);
   }
   async findRefreshToken(refresh_token) {
-    return Users.findOne({ where: { refresh_token: refresh_token } });
+    return Stores.findOne({ where: { refresh_token: refresh_token } });
   }
   async logout(id) {
-    return Users.update({ refresh_token: null }, { where: { id: id } });
+    return Stores.update({ refresh_token: null }, { where: { id: id } });
   }
   async activated(email) {
-    return Users.update({ status: 0 }, { where: { email: email } });
+    return Stores.update({ status: 0 }, { where: { email: email } });
   }
 }
 

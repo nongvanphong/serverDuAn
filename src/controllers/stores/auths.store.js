@@ -165,11 +165,25 @@ exports.Login = async (req, res) => {
         msg: "login fail!",
       });
     }
-    if (user.status != 0)
-      return res.status(403).send({
-        status: httpStatus.getStatus(403),
-        msg: "locked account!",
-      });
+    switch (user.status) {
+      case 1:
+        return res.status(403).send({
+          status: httpStatus.getStatus(403),
+          msg: "verify Otp!",
+        });
+
+      case 2:
+        return res.status(403).send({
+          status: httpStatus.getStatus(403),
+          msg: "lock account!",
+        });
+
+      case 3:
+        return res.status(403).send({
+          status: httpStatus.getStatus(403),
+          msg: "Wait for admin to verify",
+        });
+    }
 
     const timeLifeToken = dotenv.parsed.TOKEN_LIFE || configJwt.accessTokenLife;
     const passwordToken =
