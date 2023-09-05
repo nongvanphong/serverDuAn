@@ -3,6 +3,7 @@ require("express-group-routes");
 
 const AuthUser = require("../src/controllers/users/auths.user");
 const ProductUser = require("../src/controllers/users/products.user");
+const CategreysUser = require("../src/controllers/users/categreys.user");
 
 const AuthStore = require("../src/controllers/stores/auths.store");
 const Productstore = require("../src/controllers/stores/products.store");
@@ -56,7 +57,8 @@ router.group("/store", (router) => {
       isAuthStore.isAuthStore,
       Productstore.create
     );
-    router.get("/getall", isAuth.isAuth, Productstore.getAll);
+    router.get("/all", isAuthStore.isAuthStore, Productstore.getAll);
+    router.post("/acction", isAuthStore.isAuthStore, Productstore.Acction);
   });
   router.group("/categrey", (router) => {
     router.get("/all", isAuthStore.isAuthStore, CategreysStore.getAll);
@@ -77,6 +79,9 @@ router.group("/user", (router) => {
   });
   router.group("/product", (router) => {
     router.get("/all", isAuth.isAuth, ProductUser.getAll);
+  });
+  router.group("/categrey", (router) => {
+    router.get("/all", isAuth.isAuth, CategreysUser.getAll);
   });
 });
 module.exports = router;

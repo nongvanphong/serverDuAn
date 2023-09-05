@@ -59,3 +59,26 @@ exports.getAll = async (req, res) => {
     });
   }
 };
+exports.Acction = async (req, res) => {
+  try {
+    const store_id = req.user.id;
+    const { id, acction } = req.body;
+    const result = await ProductsRepo.updateStatus(id, store_id, acction);
+
+    if (result == 0) {
+      return res.status(400).json({
+        status: httpStatus.getStatus(400),
+        msg: "update product fail!",
+      });
+    }
+    res.status(200).json({
+      status: httpStatus.getStatus(200),
+      data: "update acction sussecc",
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: httpStatus.getStatus(400),
+      msg: "update product fail!",
+    });
+  }
+};
