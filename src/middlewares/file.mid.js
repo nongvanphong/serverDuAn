@@ -29,6 +29,7 @@ const moveFile = (sourcePath, destinationPath, newSourcePath) => {
 };
 
 const storeFile = (req, res, next) => {
+  const user = req.user;
   const file = req.file;
   if (!file)
     return res.status(400).send({
@@ -41,14 +42,14 @@ const storeFile = (req, res, next) => {
     __dirname,
     "..",
     "..",
-    "uploads/public/store/idstore/beverage",
+    `uploads/public/store/${user.id}/product`,
     file.filename
   );
   const destinationPath = path.join(
     __dirname,
     "..",
     "..",
-    "uploads/public/store/idstore/beverage"
+    `uploads/public/store/${user.id}/product`
   );
 
   if (moveFile(sourcePath, destinationPath, newSourcePath) == false) {

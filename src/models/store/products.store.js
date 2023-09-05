@@ -40,11 +40,23 @@ class ProductsRepo {
       ],
     });
   }
-  async findAll() {
+  async findAll(long, lat, id_cg) {
+    let whereCondition = {};
+    whereCondition.status = {
+      status: 0,
+    };
+    if (long) {
+      whereCondition.long = {
+        [Op.between]: [-long, long],
+      };
+    }
+    if (lat) {
+      whereCondition.lat = {
+        [Op.between]: [-lat, lat],
+      };
+    }
     return Products.findAndCountAll({
-      where: {
-        status: 0,
-      },
+      where: whereCondition,
       include: [
         {
           model: Sizes,
@@ -68,6 +80,12 @@ class ProductsRepo {
         "updatedAt",
       ],
     });
+  }
+  async updateStatus(id, store_id, status) {
+    return Products.update(
+      { status: status },
+      { where: { id: id, store_id: store_id } }
+    );
   }
 }
 
