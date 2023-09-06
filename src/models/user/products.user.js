@@ -83,9 +83,9 @@ class ProductsUserRepo {
       ],
     });
   }
-  async outstanding(lat_1, long_1, lat_2, long_2) {
+  async outstanding(req, lat_1, long_1, lat_2, long_2) {
+    const { offset, limit } = req.paging;
     let whereCondition = {};
-
     if (lat_1 && long_1 && lat_2 && long_2) {
       whereCondition.lat = {
         [Op.between]: [lat_1, lat_2],
@@ -99,6 +99,8 @@ class ProductsUserRepo {
       where: {
         status: 0,
       },
+      offset: offset,
+      limit: limit,
       attributes: [
         "id",
         "store_id",

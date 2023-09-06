@@ -18,6 +18,8 @@ const isAuth = require("../src/middlewares/auth.middleware");
 const isAuthStore = require("../src/middlewares/authStore.middleware");
 const isPremission = require("../src/middlewares/premission.minddleware");
 
+const { paging } = require("../src/middlewares/paging.mid");
+
 var router = express.Router();
 // router.group("/auth", (router) => {
 //   router.post("/register", validAuth.validLogin, AuthController.Rigister);
@@ -78,7 +80,7 @@ router.group("/user", (router) => {
     );
   });
   router.group("/product", (router) => {
-    router.get("/all", isAuth.isAuth, ProductUser.getAll);
+    router.get("/all", isAuth.isAuth, paging, ProductUser.getAll);
   });
   router.group("/categrey", (router) => {
     router.get("/all", isAuth.isAuth, CategreysUser.getAll);
