@@ -1,15 +1,18 @@
 const httpStatus = require("../../../configs/httptatus");
 const ProductsUserRepo = require("../../models/user/products.user");
-const PI = 3.141592653589793;
+const KM = 111.32; // bán kính trái đất
+const radius = 5;
 exports.getAll = async (req, res) => {
   try {
     const { long, lat, id_cg } = req.body;
-    let lat_1 = 12.6854297 + -5 / 111.32;
-    let long_1 = 108.0584348 + -5 / 111.32;
-    let lat_2 = 12.6854297 + 5 / 111.32;
-    let long_2 = 108.0584348 + 5 / 111.32;
-
+    let lat_1 = lat + -radius / KM;
+    let long_1 = long + -radius / KM;
+    let lat_2 = lat + radius / KM;
+    let long_2 = long + radius / KM;
+    // 12.6854297
+    // 108.0584348
     const { count, rows } = await ProductsUserRepo.outstanding(
+      req,
       lat_1,
       long_1,
       lat_2,
