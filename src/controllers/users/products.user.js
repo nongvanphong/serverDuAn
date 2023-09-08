@@ -4,19 +4,23 @@ const KM = 111.32; // bán kính trái đất
 const radius = 5;
 exports.getAll = async (req, res) => {
   try {
-    const { long, lat, id_cg } = req.body;
-    let lat_1 = lat + -radius / KM;
-    let long_1 = long + -radius / KM;
-    let lat_2 = lat + radius / KM;
-    let long_2 = long + radius / KM;
+    const { long, lat, cg_id } = req.query;
+    const latFloat = parseFloat(lat);
+    const longFloat = parseFloat(long);
+    let lat_1 = latFloat - radius / KM;
+    let long_1 = longFloat - radius / KM;
+    let lat_2 = latFloat + radius / KM;
+    let long_2 = longFloat + radius / KM;
     // 12.6854297
     // 108.0584348
-    const { count, rows } = await ProductsUserRepo.outstanding(
+
+    const { count, rows } = await ProductsUserRepo.all(
       req,
       lat_1,
       long_1,
       lat_2,
-      long_2
+      long_2,
+      cg_id
     );
     return res.status(200).json({
       status: httpStatus.getStatus(200),

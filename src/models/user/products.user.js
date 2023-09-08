@@ -83,9 +83,15 @@ class ProductsUserRepo {
       ],
     });
   }
-  async outstanding(req, lat_1, long_1, lat_2, long_2) {
+  async all(req, lat_1, long_1, lat_2, long_2, cg_id) {
     const { offset, limit } = req.paging;
+
     let whereCondition = {};
+    let whereConditionProduct = {};
+    whereConditionProduct.status = 0;
+    if (cg_id) {
+      whereConditionProduct.cg_id = cg_id;
+    }
     if (lat_1 && long_1 && lat_2 && long_2) {
       whereCondition.lat = {
         [Op.between]: [lat_1, lat_2],
@@ -96,9 +102,7 @@ class ProductsUserRepo {
     }
 
     return Products.findAndCountAll({
-      where: {
-        status: 0,
-      },
+      where: whereConditionProduct,
       offset: offset,
       limit: limit,
       attributes: [
@@ -111,12 +115,13 @@ class ProductsUserRepo {
         "createdAt",
         "updatedAt",
       ],
-      required: true,
+
       include: [
         {
           model: Stores,
           where: whereCondition,
           required: false,
+          right: true,
           attributes: [
             "store_name",
             "manager_phone_number",
