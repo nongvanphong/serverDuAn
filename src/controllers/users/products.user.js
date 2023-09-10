@@ -28,10 +28,27 @@ exports.getAll = async (req, res) => {
       data: rows,
     });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({
       status: httpStatus.getStatus(400),
       msg: "get all product fail!",
+    });
+  }
+};
+exports.getStoreProduct = async (req, res) => {
+  try {
+    const { store_id } = req.query;
+    const { count, rows } = await ProductsUserRepo.findStore(req, store_id);
+    const size = Object.values(count);
+
+    return res.status(200).json({
+      status: httpStatus.getStatus(200),
+      total: size.length,
+      data: rows,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: httpStatus.getStatus(400),
+      msg: "get store product fail!",
     });
   }
 };
