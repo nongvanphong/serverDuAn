@@ -6,14 +6,18 @@ const {
   Sizes,
   Categreys,
   Stores,
+  sequelize,
 } = require("../../../databases/models/index");
 
 class ProductsUserRepo {
   async create(data, transaction) {
     return Products.create(data, { transaction });
   }
-  async findStore(store_id) {
+  async findStore(req, store_id) {
+    const { offset, limit } = req.paging;
     return Products.findAndCountAll({
+      offset: offset,
+      limit: limit,
       where: {
         store_id: store_id,
       },
@@ -23,11 +27,11 @@ class ProductsUserRepo {
           required: false,
           attributes: ["id", "pr_id", "pr_price", "pr_size"],
         },
-        {
-          model: Categreys,
-          required: false,
-          attributes: ["id", "cg_name"],
-        },
+        // {
+        //   model: Categreys,
+        //   required: false,
+        //   attributes: ["id", "cg_name"],
+        // },
       ],
       attributes: [
         "id",
@@ -39,6 +43,7 @@ class ProductsUserRepo {
         "createdAt",
         "updatedAt",
       ],
+      group: ["id"],
     });
   }
   async findAll(long, lat, id_cg) {
