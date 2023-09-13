@@ -5,38 +5,34 @@ const ProductsRepo = require("../../models/store/products.store");
 exports.create = async (req, res) => {
   try {
     const user = req.user;
-
+    console.log(user.id);
     const { name_product, detail, pr_price, pr_size, cg_id } = req.body;
     const parsedBrPrice = JSON.parse(pr_price);
     const parsedBrSize = JSON.parse(pr_size);
-    await sequelize.transaction(async (transaction) => {
-      const newBeverage = {
-        name_product,
-        detail,
-        image_product: req.fileResult,
-        store_id: user.id,
-        cg_id,
-      };
-      const result = await ProductsRepo.create(newBeverage, transaction);
 
-      let dataBeverageOption = [];
-      parsedBrSize.map((i, index) => {
-        dataBeverageOption.push({
-          pr_id: result.dataValues.id,
-          pr_price: parsedBrPrice[index],
-          pr_size: i,
-        });
-      });
-
-      await ProductsSizeRepo.create(dataBeverageOption, transaction);
-
-      return res.status(201).json({
-        status: httpStatus.getStatus(201),
-        data: "ok",
+    let dataBeverageOption = [];
+    parsedBrSize.map((i, index) => {
+      dataBeverageOption.push({
+        pr_price: parsedBrPrice[index],
+        pr_size: i,
       });
     });
+    // console.log("==:", JSON.stringify(dataBeverageOption));
+    const newBeverage = {
+      name_product,
+      detail,
+      image_product: req.fileResult,
+      store_id: user.id,
+      cg_id,
+      options: JSON.stringify(dataBeverageOption),
+    };
+    const result = await ProductsRepo.create(newBeverage);
+
+    return res.status(201).json({
+      status: httpStatus.getStatus(201),
+      data: "ok",
+    });
   } catch (error) {
-    console.log(error);
     return res.status(400).json({
       status: httpStatus.getStatus(400),
       msg: "create beverage fail!",
