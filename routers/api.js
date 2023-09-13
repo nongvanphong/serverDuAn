@@ -56,8 +56,9 @@ router.group("/store", (router) => {
     router.post(
       "/create",
       uploadFile.single("file"),
-      vaildFile.storeFile,
       isAuthStore.isAuthStore,
+      vaildFile.storeFile,
+
       Productstore.create
     );
     router.get("/all", isAuthStore.isAuthStore, Productstore.getAll);

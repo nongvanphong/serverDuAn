@@ -30,6 +30,7 @@ const moveFile = (sourcePath, destinationPath, newSourcePath) => {
 
 const storeFile = (req, res, next) => {
   const user = req.user;
+
   const file = req.file;
   if (!file)
     return res.status(400).send({

@@ -3,13 +3,13 @@
 const { Op, on, Sequelize } = require("sequelize");
 const {
   Products,
-  Sizes,
+
   Categreys,
 } = require("../../../databases/models/index");
 
 class ProductsRepo {
-  async create(data, transaction) {
-    return Products.create(data, { transaction });
+  async create(data) {
+    return Products.create(data);
   }
   async findStore(store_id) {
     return Products.findAndCountAll({
@@ -17,11 +17,6 @@ class ProductsRepo {
         store_id: store_id,
       },
       include: [
-        {
-          model: Sizes,
-          required: false,
-          attributes: ["id", "pr_id", "pr_price", "pr_size"],
-        },
         {
           model: Categreys,
           required: false,
@@ -35,6 +30,7 @@ class ProductsRepo {
         "image_product",
         "detail",
         "status",
+        "options",
         "createdAt",
         "updatedAt",
       ],
@@ -49,11 +45,6 @@ class ProductsRepo {
     return Products.findAndCountAll({
       where: whereCondition,
       include: [
-        {
-          model: Sizes,
-          required: false,
-          attributes: ["id", "pr_id", "pr_price", "pr_size"],
-        },
         {
           model: Categreys,
           required: false,
