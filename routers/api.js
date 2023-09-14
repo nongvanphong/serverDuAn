@@ -58,9 +58,17 @@ router.group("/store", (router) => {
       uploadFile.single("file"),
       isAuthStore.isAuthStore,
       vaildFile.storeFile,
-
       Productstore.create
     );
+    router.post(
+      "/update1",
+      uploadFile.single("file"),
+      isAuthStore.isAuthStore,
+      vaildFile.storeFile,
+      Productstore.update1
+    );
+    router.post("/update2", isAuthStore.isAuthStore, Productstore.update2);
+    router.post("/delete", isAuthStore.isAuthStore, Productstore.delete);
     router.get("/all", isAuthStore.isAuthStore, Productstore.getAll);
     router.post("/acction", isAuthStore.isAuthStore, Productstore.Acction);
   });
