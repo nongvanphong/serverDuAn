@@ -69,6 +69,19 @@ class ProductsRepo {
       { where: { id: id, store_id: store_id } }
     );
   }
+  async updateProduct(id, data) {
+    return Products.update(data, { where: { id: id } });
+  }
+  async findByPk(id) {
+    return Products.findByPk(id);
+  }
+  async delete(id) {
+    return Products.destroy({
+      where: {
+        id: id,
+      },
+    });
+  }
 }
 
 module.exports = new ProductsRepo();
