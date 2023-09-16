@@ -22,16 +22,16 @@ class ProductsUserRepo {
         store_id: store_id,
       },
       include: [
-        {
-          model: Sizes,
-          required: false,
-          attributes: ["id", "pr_id", "pr_price", "pr_size"],
-        },
         // {
-        //   model: Categreys,
+        //   model: Sizes,
         //   required: false,
-        //   attributes: ["id", "cg_name"],
+        //   attributes: ["id", "pr_id", "pr_price", "pr_size"],
         // },
+        {
+          model: Categreys,
+          required: false,
+          attributes: ["id", "cg_name"],
+        },
       ],
       attributes: [
         "id",
@@ -88,7 +88,8 @@ class ProductsUserRepo {
       ],
     });
   }
-  async all(req, lat_1, long_1, lat_2, long_2, cg_id) {
+  //lat_1, long_1, lat_2, long_2,
+  async all(req, cg_id) {
     const { offset, limit } = req.paging;
 
     let whereCondition = {};
@@ -97,14 +98,14 @@ class ProductsUserRepo {
     if (cg_id) {
       whereConditionProduct.cg_id = cg_id;
     }
-    if (lat_1 && long_1 && lat_2 && long_2) {
-      whereCondition.lat = {
-        [Op.between]: [lat_1, lat_2],
-      };
-      whereCondition.long = {
-        [Op.between]: [long_1, long_2],
-      };
-    }
+    // if (lat_1 && long_1 && lat_2 && long_2) {
+    //   whereCondition.lat = {
+    //     [Op.between]: [lat_1, lat_2],
+    //   };
+    //   whereCondition.long = {
+    //     [Op.between]: [long_1, long_2],
+    //   };
+    // }
 
     return Products.findAndCountAll({
       where: whereConditionProduct,
@@ -116,6 +117,7 @@ class ProductsUserRepo {
         "name_product",
         "image_product",
         "detail",
+        "options",
         "status",
         "createdAt",
         "updatedAt",
