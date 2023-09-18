@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       status: DataTypes.TINYINT(2),
       refresh_token: DataTypes.STRING(150),
       image: DataTypes.STRING(50),
+      address: DataTypes.STRING(150),
     },
     {
       sequelize,

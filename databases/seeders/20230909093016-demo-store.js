@@ -11,21 +11,23 @@ module.exports = {
       "Stores",
       [
         {
-          email: "gaquay@gmail.com",
+          email: "highdrink@gmail.com",
           store_phone_number: "0977777777",
-          store_name: "gà quay lắc",
+          store_name: "High Drink",
           manager_phone_number: "0977777777",
           lat: 12.6917223,
           long: 108.0546495,
-          image: null,
-          address: "đăc lăck",
+          image: "high_drink.jpg",
+          address: "Đăk Lăk",
           status: 0,
           refresh_token: null,
           password: bcrypt.hashSync(password, numberHash),
-          describe: "gà quay siêu ngoan đặc snar miền núi",
+          describe: `Tọa lạc ngay trung tâm Buôn Mê, Amour có đa dạng không gian từ trong “nhà” cho đến ngoài trời rooftop, bạn thoải mái lựa chọn nơi thích hợp nhất để tổ chức bữa tiệc của riêng mình. Trong không gian lung linh, còn gì tuyệt vời hơn khi cả nhà mình vừa ngồi trò chuyện tâm tình vừa thưởng thức các món Âu chuẩn vị được bày trí bắt mắt. 
+          Một buổi tiệc sinh nhật gần gũi bên gia đình, bạn bè hay ngày kỉ niệm với người thương, chỉ cần đặt chân đến Amour, chúng tôi sẽ khiến buổi tiệc của bạn trở nên đáng nhớ hơn bao giờ hết `,
           createdAt: now,
           updatedAt: now,
         },
+
         // {
         //   email: "comtambatam@gmail.com",
         //   store_phone_number: "0394717172",

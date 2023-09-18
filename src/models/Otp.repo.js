@@ -29,7 +29,7 @@ class OtpsRepo {
   async verify(email, code) {
     const timenow1 = new Date().toISOString();
 
-    return Otps.findOne({
+    return Otps.destroy({
       where: {
         email: email,
         codes: code,

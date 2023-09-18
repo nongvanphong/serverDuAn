@@ -62,7 +62,41 @@ const storeFile = (req, res, next) => {
   req.fileResult = file.filename;
   return next();
 };
+const userFile = (req, res, next) => {
+  const user = req.user;
 
+  const file = req.file;
+  if (!file)
+    return res.status(400).send({
+      status: httpStatus.getStatus(400),
+      msg: "upload file fail!",
+    });
+
+  const sourcePath = `uploads/private/images/temps/${file.filename}`;
+  const newSourcePath = path.join(
+    __dirname,
+    "..",
+    "..",
+    `uploads/public/user/${user.id}/avatar`,
+    file.filename
+  );
+  const destinationPath = path.join(
+    __dirname,
+    "..",
+    "..",
+    `uploads/public/user/${user.id}/avatar`
+  );
+
+  if (moveFile(sourcePath, destinationPath, newSourcePath) == false) {
+    if (deleteFile(sourcePath) == true) {
+      return;
+    }
+    return;
+  }
+  req.fileResult = file.filename;
+  return next();
+};
 module.exports = {
   storeFile,
+  userFile,
 };

@@ -40,6 +40,12 @@ class AuthModel {
   async activated(email) {
     return Users.update({ status: 0 }, { where: { email: email } });
   }
+  async update(dataUpdate, id) {
+    return Users.update(dataUpdate, { where: { id: id } });
+  }
+  async forgotPassword(dataUpdate, email) {
+    return Users.update(dataUpdate, { where: { email: email } });
+  }
 }
 
 module.exports = new AuthModel();

@@ -89,6 +89,18 @@ router.group("/user", (router) => {
       //userValidAuth.validPhoneEmail,
       AuthUser.CheckMailPhone
     );
+    router.post("/update/username", isAuth.isAuth, AuthUser.updateUserName);
+    router.post("/update/password", isAuth.isAuth, AuthUser.updatePassword);
+
+    router.post("/update/address", isAuth.isAuth, AuthUser.updateAddess);
+    router.post(
+      "/update/avatar",
+      uploadFile.single("file"),
+      isAuth.isAuth,
+      vaildFile.userFile,
+      AuthUser.updateAVT
+    );
+    router.post("/forgotpassword", AuthUser.forgotpassword);
   });
   router.group("/product", (router) => {
     router.get("/all", isAuth.isAuth, paging, ProductUser.getAll);
