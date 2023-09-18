@@ -21,7 +21,32 @@ module.exports = {
           updatedAt: now,
         },
         {
-          cg_name: "Đồ đồ ăn",
+          cg_name: "Đồ ăn",
+          createdAt: now,
+          updatedAt: now,
+        },
+        {
+          cg_name: "Đồ ăn nhanh",
+          createdAt: now,
+          updatedAt: now,
+        },
+        {
+          cg_name: "Lẩu",
+          createdAt: now,
+          updatedAt: now,
+        },
+        {
+          cg_name: "Bánh",
+          createdAt: now,
+          updatedAt: now,
+        },
+        {
+          cg_name: "Đồ ăn vặt",
+          createdAt: now,
+          updatedAt: now,
+        },
+        {
+          cg_name: "Nước uống đóng chai",
           createdAt: now,
           updatedAt: now,
         },

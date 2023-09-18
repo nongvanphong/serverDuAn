@@ -36,6 +36,9 @@ module.exports = {
       image: {
         type: Sequelize.STRING(50),
       },
+      address: {
+        type: Sequelize.STRING(150),
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,
