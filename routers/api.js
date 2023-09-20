@@ -5,6 +5,7 @@ const AuthUser = require("../src/controllers/users/auths.user");
 const ProductUser = require("../src/controllers/users/products.user");
 const CategreysUser = require("../src/controllers/users/categreys.user");
 const StoreUser = require("../src/controllers/users/store.user");
+const OderUser = require("../src/controllers/users/oders.user");
 
 const AuthStore = require("../src/controllers/stores/auths.store");
 const Productstore = require("../src/controllers/stores/products.store");
@@ -111,6 +112,9 @@ router.group("/user", (router) => {
   });
   router.group("/store", (router) => {
     router.get("/store", isAuth.isAuth, StoreUser.findStore);
+  });
+  router.group("/oder", (router) => {
+    router.post("/create", isAuth.isAuth, OderUser.create);
   });
 });
 module.exports = router;
