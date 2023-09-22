@@ -1,8 +1,7 @@
 const httpStatus = require("../../../configs/httptatus");
 const BillRepo = require("../../models/bill.repo");
-const ProductsUserRepo = require("../../models/user/products.user");
 const BilldetailRepo = require("../../models/billdetail.repo");
-const TestRepo = require("../../models/test.repo");
+
 const { sequelize } = require("../../../databases/models");
 exports.create = async (req, res) => {
   try {
@@ -47,7 +46,7 @@ exports.create = async (req, res) => {
           product: {
             name: i.name_product,
             options: product_oder[index].options,
-            // detail: i.detail,
+            detail: i.detail,
           },
           total_cost: sum,
           //vourcher: null,
@@ -128,4 +127,32 @@ exports.create = async (req, res) => {
   //     });
   //   }
   // };
+};
+exports.all = async (req, res) => {
+  try {
+    const { id } = req.user;
+    return res.status(200).json({
+      status: httpStatus.getStatus(200),
+      data: await BillRepo.findOderAllStore(id),
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: httpStatus.getStatus(400),
+      msg: "get oder fail!",
+    });
+  }
+};
+exports.detail = async (req, res) => {
+  try {
+    const { id } = req.query;
+    return res.status(200).json({
+      status: httpStatus.getStatus(200),
+      data: await BillRepo.findOderAllStoreDetail(id),
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: httpStatus.getStatus(400),
+      msg: "get oder fail!",
+    });
+  }
 };

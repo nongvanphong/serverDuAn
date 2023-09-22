@@ -1,7 +1,13 @@
 "use strict";
 
 const { Op } = require("sequelize");
-const { Bills, Products, sequelize } = require("../../databases/models/index");
+const {
+  Bills,
+  Products,
+  Users,
+  Billdetails,
+  sequelize,
+} = require("../../databases/models/index");
 
 class BillRepo {
   async create(data, transaction) {
@@ -32,6 +38,40 @@ class BillRepo {
     return Otps.update(data, {
       where: { email: email },
       transaction: transaction,
+    });
+  }
+  async findOderAllStore(id) {
+    return Bills.findAll({
+      where: {
+        status: 0,
+        store_id: id,
+      },
+      include: [
+        {
+          model: Users,
+          required: false,
+          attributes: ["user_name", "email", "phone", "address", "image"],
+        },
+        {
+          model: Billdetails,
+          required: false,
+          attributes: ["product", "total_cost"],
+        },
+      ],
+    });
+  }
+  async findOderAllStoreDetail(id) {
+    return Bills.findAll({
+      where: {
+        status: 0,
+        id: id,
+      },
+      include: [
+        {
+          model: Billdetails,
+          required: false,
+        },
+      ],
     });
   }
 }
