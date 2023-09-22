@@ -5,10 +5,12 @@ const AuthUser = require("../src/controllers/users/auths.user");
 const ProductUser = require("../src/controllers/users/products.user");
 const CategreysUser = require("../src/controllers/users/categreys.user");
 const StoreUser = require("../src/controllers/users/store.user");
+const OderUser = require("../src/controllers/users/oders.user");
 
 const AuthStore = require("../src/controllers/stores/auths.store");
 const Productstore = require("../src/controllers/stores/products.store");
 const CategreysStore = require("../src/controllers/stores/categreys.store");
+const OderStore = require("../src/controllers/stores/oders.store");
 
 const uploadFile = require("../src/config/upload.config");
 
@@ -75,6 +77,10 @@ router.group("/store", (router) => {
   router.group("/categrey", (router) => {
     router.get("/all", isAuthStore.isAuthStore, CategreysStore.getAll);
   });
+  router.group("/oder", (router) => {
+    router.get("/all", isAuthStore.isAuthStore, OderStore.all);
+    router.get("/all/detail", isAuthStore.isAuthStore, OderStore.detail);
+  });
 });
 
 router.group("/user", (router) => {
@@ -111,6 +117,9 @@ router.group("/user", (router) => {
   });
   router.group("/store", (router) => {
     router.get("/store", isAuth.isAuth, StoreUser.findStore);
+  });
+  router.group("/oder", (router) => {
+    router.post("/create", isAuth.isAuth, OderUser.create);
   });
 });
 module.exports = router;

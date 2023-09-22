@@ -141,6 +141,13 @@ class ProductsUserRepo {
       ],
     });
   }
+  async all(id) {
+    return Products.findAll({
+      where: {
+        id: id,
+      },
+    });
+  }
 }
 
 module.exports = new ProductsUserRepo();
