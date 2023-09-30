@@ -27,6 +27,9 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.get("/test", (req, res) => {
+  res.send("abc xin chòa");
+});
 
 app.use(router);
 
